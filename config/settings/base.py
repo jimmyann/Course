@@ -41,6 +41,23 @@ USE_L10N = True  # 使用当前语言环境的格式显示数字和日期
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
 USE_TZ = True
 
+# DATABASES
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  # 提示连接mysql数据库
+        'NAME': env.str('DATABASE_NAME'),  # 数据库名为test，要自己创建
+        'USER': env.str('DATABASE_USERNAME'),  # 用户名
+        'PASSWORD': env.str('DATABASE_PASSWORD'),  # 密码
+        'HOST': env.str('DATABASE_HOST'),  # 连接的主机
+        'PORT': env.str('DATABASE_PORT'),  # 对应的端口号
+    }
+}
+
+
+
 # Application definition
 
 DJANGO_APPS = [
@@ -88,7 +105,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
+# https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
+AUTH_USER_MODEL = 'users.User'
 # STATIC
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-root

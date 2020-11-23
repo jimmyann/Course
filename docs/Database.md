@@ -1,3 +1,7 @@
+# 增加数据库
+
+#### 修改 `users`数据模型
+```python
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
@@ -32,3 +36,49 @@ class User(AbstractUser):
         if self.nickname:
             return self.nickname
         return self.username
+
+```
+#### 连接数据库 `config/settings/base.py`
+```python  
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  # 提示连接mysql数据库
+        'NAME': env.str('DATABASE_NAME'),  # 数据库名为test，要自己创建
+        'USER': env.str('DATABASE_USERNAME'),  # 用户名
+        'PASSWORD': env.str('DATABASE_PASSWORD'),  # 密码
+        'HOST': env.str('DATABASE_HOST'),  # 连接的主机
+        'PORT': env.str('DATABASE_PORT'),  # 对应的端口号
+    }
+}
+
+AUTH_USER_MODEL = 'users.User'
+
+```
+#### 环境变量 `.env`
+
+```bash  
+# MySQL 连接配置
+DATABASE_NAME=django
+DATABASE_USERNAME=root
+DATABASE_PASSWORD=123456
+DATABASE_HOST=192.168.5.160
+DATABASE_PORT=3306
+```
+
+#### 安装 `mysql`数据驱动
+```bash
+pipenv install mysqlclient
+```
+### 数模模型 `ImageField`需要的图片包扩展
+```bash
+pipenv install pillow
+```
+#### 同步数据模型
+```python  
+./manage.py makemigrations 
+```
+
+#### 同步数据表结构和数据迁移
+```python 
+./manage.py migrate
+```
