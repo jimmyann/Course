@@ -1,14 +1,43 @@
+import environ
 from pathlib import Path
 
+"""
+Base settings to build other settings files upon.
+"""
+
+ROOT_DIR = environ.Path(__file__) - 3  # (Course/config/settings/base.py - 3 = apps/)
 BASE_DIR = Path(__file__).resolve().parent.parent
+APPS_DIR = ROOT_DIR.path('apps')  # media, static, staticfiles的文件路径
 
+print(ROOT_DIR)  # /Course
+print(BASE_DIR)  # /config
+print(APPS_DIR)  # /apps
 
-SECRET_KEY = '$e%u^o6b!t27319!295+vp#guf5)mtn6p5iz2rxj7(bzvv13l%'
+env = environ.Env()
+READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=True)  # 使用.env，此项设置为True
+if READ_DOT_ENV_FILE:
+    # OS environment variables take precedence over variables from .env
+    env.read_env(str(ROOT_DIR.path('.env')))
 
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+# GENERAL
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#debug
+DEBUG = env.bool('DJANGO_DEBUG', False)
+# Local time zone. Choices are
+# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+# though not all of them may be available with every OS.
+# In Windows, this must be set to your system time zone.
+TIME_ZONE = 'Asia/Shanghai'
+# https://docs.djangoproject.com/en/dev/ref/settings/#language-code
+LANGUAGE_CODE = 'zh-Hans'
+# https://docs.djangoproject.com/en/dev/ref/settings/#site-id
+SITE_ID = 1
+# https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
+USE_I18N = True  # 开启国际化支持
+# https://docs.djangoproject.com/en/dev/ref/settings/#use-l10n
+USE_L10N = True  # 使用当前语言环境的格式显示数字和日期
+# https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
+USE_TZ = True
 
 # Application definition
 
@@ -51,17 +80,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-LANGUAGE_CODE = 'en-us'
+# STATIC
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#static-root
+STATIC_ROOT = str(APPS_DIR('static'))  # 执行collectstatic命令后会将项目中的静态文件收集到该目录下面来
+# https://docs.djangoproject.com/en/dev/ref/settings/#static-url
+STATIC_URL = '/static/'  # 指定静态目录的URL
+# https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
+STATICFILES_DIRS = [  # 引用位于STATIC_ROOT中的静态文件时使用的网址
+    str(APPS_DIR.path('staticfiles')),
+]
+# https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
-TIME_ZONE = 'UTC'
 
-USE_I18N = True
+# MEDIA
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#media-root
+MEDIA_ROOT = str(APPS_DIR('media'))  # 在Windows开发环境下加上.replace("\\", "/")
+# https://docs.djangoproject.com/en/dev/ref/settings/#media-url
+MEDIA_URL = '/media/'
 
-USE_L10N = True
-
-USE_TZ = True
-
-
-
-
-STATIC_URL = '/static/'
