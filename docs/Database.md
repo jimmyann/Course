@@ -65,11 +65,11 @@ DATABASE_HOST=192.168.5.160
 DATABASE_PORT=3306
 ```
 
-#### 安装 `mysql`数据驱动
+#### 安装`mysql`数据驱动
 ```bash
 pipenv install mysqlclient
 ```
-### 数模模型 `ImageField`需要的图片包扩展
+#### 数模模型`ImageField`需要的图片包扩展
 ```bash
 pipenv install pillow
 ```

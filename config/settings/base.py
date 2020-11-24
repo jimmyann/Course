@@ -56,8 +56,6 @@ DATABASES = {
     }
 }
 
-
-
 # Application definition
 
 DJANGO_APPS = [
@@ -65,16 +63,30 @@ DJANGO_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
-THIRD_PARTY_APPS = []
+THIRD_PARTY_APPS = [
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
+]
 LOCAL_APPS = [
     # 第一个apps 代表 目录文件夹， 第二个 apps 表示 users 文件夹下面的apps.py
     'apps.users.apps.UsersConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+# AUTHENTICATION
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # django默认的认证
+    'allauth.account.auth_backends.AuthenticationBackend',  # django-allauth的认证
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
