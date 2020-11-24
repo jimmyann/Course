@@ -68,10 +68,12 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 THIRD_PARTY_APPS = [
+    'crispy_forms',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
+    'sorl.thumbnail'
 ]
 LOCAL_APPS = [
     # 第一个apps 代表 目录文件夹， 第二个 apps 表示 users 文件夹下面的apps.py
@@ -87,6 +89,13 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # django默认的认证
     'allauth.account.auth_backends.AuthenticationBackend',  # django-allauth的认证
 ]
+# https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
+AUTH_USER_MODEL = 'users.User'
+# https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
+LOGIN_REDIRECT_URL = 'news:list'  # 登录跳转配置
+# https://docs.djangoproject.com/en/dev/ref/settings/#login-url
+LOGIN_URL = 'account_login'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -103,7 +112,9 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            str(APPS_DIR.path('templates')),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -115,10 +126,11 @@ TEMPLATES = [
         },
     },
 ]
+# http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 WSGI_APPLICATION = 'config.wsgi.application'
-# https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
-AUTH_USER_MODEL = 'users.User'
+
 # STATIC
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-root
@@ -141,3 +153,40 @@ STATICFILES_FINDERS = [
 MEDIA_ROOT = str(APPS_DIR('media'))  # 在Windows开发环境下加上.replace("\\", "/")
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = '/media/'
+
+
+# EMAIL
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
+EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-host
+EMAIL_HOST = env('DJANGO_EMAIL_HOST')
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-port
+EMAIL_USE_SSL = env('DJANGO_EMAIL_USE_SSL', default=True)
+EMAIL_PORT = env('DJANGO_EMAIL_PORT', default=465)
+EMAIL_HOST_USER = env('DJANGO_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('DJANGO_EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL')
+
+# django-allauth
+# ------------------------------------------------------------------------------
+ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_AUTHENTICATION_METHOD = 'username'  # email/username_email
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_EMAIL_REQUIRED = True
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # none , optional mandatory
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_ADAPTER = 'apps.users.adapters.AccountAdapter'
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+SOCIALACCOUNT_ADAPTER = 'apps.users.adapters.SocialAccountAdapter'
+
+
+# django-compressor
+# ------------------------------------------------------------------------------
+# https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
+INSTALLED_APPS += ['compressor']
+STATICFILES_FINDERS += ['compressor.finders.CompressorFinder']
+# Your stuff...
+# ------------------------------------------------------------------------------

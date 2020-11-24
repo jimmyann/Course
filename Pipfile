@@ -9,6 +9,9 @@ django-environ = "*"
 mysqlclient = "*"
 pillow = "*"
 django-allauth = "*"
+django-crispy-forms = "*"
+sorl-thumbnail = "*"
+django-compressor = "*"
 
 [dev-packages]
 
