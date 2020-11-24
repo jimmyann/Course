@@ -1,3 +1,31 @@
-from django.shortcuts import render
+from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DeleteView, UpdateView
 
-# Create your views here.
+from apps.users.models import User
+
+
+class UserDetailView(LoginRequiredMixin, DeleteView):
+    model = User
+    template_name = 'users/user_detail.html'
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
+
+    pass
+
+
+class UserUpdateView(LoginRequiredMixin, UpdateView):
+    """用户只能更新自己的信息"""
+
+    model = User
+    fields = ['nickname', 'email', 'picture', 'introduction', 'job_title', 'location',
+              'personal_url', 'weibo', 'zhihu', 'github', 'linkedin']
+
+    template_name = 'users/user_form.html'
+
+    def get_success_url(self):
+        """更新成功后跳转到用户自己的页面"""
+        return reverse("users:detail", kwargs={"username": self.request.user.username})
+
+    def get_object(self, queryset=None):
+        return self.request.user

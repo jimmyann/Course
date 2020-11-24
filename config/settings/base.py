@@ -73,7 +73,8 @@ THIRD_PARTY_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
-    'sorl.thumbnail'
+    'sorl.thumbnail',
+    'rest_framework',
 ]
 LOCAL_APPS = [
     # 第一个apps 代表 目录文件夹， 第二个 apps 表示 users 文件夹下面的apps.py
@@ -154,7 +155,6 @@ MEDIA_ROOT = str(APPS_DIR('media'))  # 在Windows开发环境下加上.replace("
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = '/media/'
 
-
 # EMAIL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
@@ -176,12 +176,11 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username'  # email/username_email
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # none , optional mandatory
+ACCOUNT_EMAIL_VERIFICATION = 'optional'  # none , optional mandatory
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_ADAPTER = 'apps.users.adapters.AccountAdapter'
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 SOCIALACCOUNT_ADAPTER = 'apps.users.adapters.SocialAccountAdapter'
-
 
 # django-compressor
 # ------------------------------------------------------------------------------
