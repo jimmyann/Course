@@ -1,4 +1,6 @@
 from test_plus.test import TestCase
+from apps.users.models import User
+from django.conf import settings
 
 
 class TestUser(TestCase):
