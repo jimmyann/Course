@@ -17,6 +17,7 @@ class News(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
     class Meta:
+        db_table = 'news'
         verbose_name = '首页'
         verbose_name_plural = verbose_name
         ordering = ('-created_at',)

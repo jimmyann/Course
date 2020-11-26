@@ -1,8 +1,6 @@
 import environ
 from pathlib import Path
 
-
-
 """
 Base settings to build other settings files upon.
 """
@@ -53,6 +51,9 @@ DATABASES = {
         'PASSWORD': env.str('DATABASE_PASSWORD'),  # 密码
         'HOST': env.str('DATABASE_HOST'),  # 连接的主机
         'PORT': env.str('DATABASE_PORT'),  # 对应的端口号
+        'TEST': {
+            'NAME': 'django_db_test'
+        }
     }
 }
 
@@ -72,9 +73,10 @@ THIRD_PARTY_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.github',
+    # 'allauth.socialaccount.providers.github',
     'sorl.thumbnail',
     'rest_framework',
+
 ]
 LOCAL_APPS = [
     # 第一个apps 代表 目录文件夹， 第二个 apps 表示 users 文件夹下面的apps.py
