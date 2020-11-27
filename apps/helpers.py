@@ -1,6 +1,8 @@
 from functools import wraps
 
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseBadRequest
+from django.views.generic import View
 
 
 def ajax_required(f):
@@ -13,3 +15,14 @@ def ajax_required(f):
         return f(request, *args, **kwargs)
 
     return wrap
+
+
+class AuthorRequiredMixin(View):
+    """验证是否为原作者，用户状态删除、文章编辑"""
+
+    def dispatch(self, request, *args, **kwargs):
+        # 状态和文章实例有user属性
+        if self.get_object().user.username != self.request.user.username:
+            raise PermissionDenied
+
+        return super(AuthorRequiredMixin, self).dispatch(request, *args, **kwargs)

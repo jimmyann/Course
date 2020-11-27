@@ -1,11 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView
+from django.views.generic import ListView, DeleteView
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_http_methods
-
-from apps.helpers import ajax_required
+from django.urls import reverse_lazy
+from apps.helpers import ajax_required, AuthorRequiredMixin
 from apps.news.models import News
 
 
@@ -18,6 +18,13 @@ class NewsListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return News.objects.filter(reply=False)
+
+
+class NewsDeleteView(LoginRequiredMixin, AuthorRequiredMixin, DeleteView):
+    model = News
+    template_name = 'news/news_confirm_delete.html'
+    success_url = reverse_lazy('news:list')
+
 
 @login_required
 @ajax_required
