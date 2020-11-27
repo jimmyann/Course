@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DeleteView
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_http_methods
 from django.urls import reverse_lazy
@@ -36,3 +36,16 @@ def post_news(request):
         posted = News.objects.create(user=request.user, content=post)
         html = render_to_string('news/news_single.html', {'news': posted, 'request': request})
         return HttpResponse(html)
+
+
+@login_required
+@ajax_required
+@require_http_methods(['POST'])
+def like(request):
+    """点赞,AJAX POST请求"""
+    news_id = request.POST['news']
+    news = News.objects.get(pk=news_id)
+    # 取消或者添加赞
+    news.switch_like(request.user)
+    # 返回赞的数量
+    return JsonResponse({'likes': news.count_likers()})
