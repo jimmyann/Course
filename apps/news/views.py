@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DeleteView
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_http_methods
 from django.urls import reverse_lazy
@@ -49,3 +49,34 @@ def like(request):
     news.switch_like(request.user)
     # 返回赞的数量
     return JsonResponse({'likes': news.count_likers()})
+
+
+@login_required
+@ajax_required
+@require_http_methods(['GET'])
+def get_thread(request):
+    """返回动态的评论,AJAX GET请求"""
+    news_id = request.GET['news']
+    news = News.objects.get(pk=news_id)
+    news_html = render_to_string('news/news_single.html', {'news': news})  # 没有评论的时候
+    thread_html = render_to_string('news/news_thread.html', {'thread': news.get_thread()})  # 有评论的时候
+    return JsonResponse({
+        'uuid': news_id,
+        'news': news_html,
+        'thread': thread_html,
+    })
+
+
+@login_required
+@ajax_required
+@require_http_methods(['POST'])
+def post_comment(request):
+    """评论,AJAX POST 请求"""
+    post = request.POST['reply'].strip()
+    parent_id = request.POST['parent']
+    parent = News.objects.get(pk=parent_id)
+    if post:
+        parent.reply_this(request.user, post)
+        return JsonResponse({'comments': parent.comment_count()})
+    else:
+        return HttpResponseBadRequest("内容不能为空！")
