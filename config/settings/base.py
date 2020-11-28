@@ -52,8 +52,11 @@ DATABASES = {
         'HOST': env.str('DATABASE_HOST'),  # 连接的主机
         'PORT': env.str('DATABASE_PORT'),  # 对应的端口号
         'TEST': {
-            'NAME': 'django_db_test'
-        }
+            'NAME': 'django_db_test',
+            'CHARSET': 'utf8mb4',
+            'COLLATION': 'utf8mb4_general_ci',
+        },
+        'OPTIONS': {'charset': 'utf8mb4'}
     }
 }
 
@@ -85,7 +88,7 @@ LOCAL_APPS = [
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
-
+print(INSTALLED_APPS)
 # AUTHENTICATION
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
