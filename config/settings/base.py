@@ -85,10 +85,11 @@ LOCAL_APPS = [
     # 第一个apps 代表 目录文件夹， 第二个 apps 表示 users 文件夹下面的apps.py
     'apps.users.apps.UsersConfig',
     'apps.news.apps.NewsConfig',
+    'apps.articles.apps.ArticlesConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
-print(INSTALLED_APPS)
+
 # AUTHENTICATION
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
